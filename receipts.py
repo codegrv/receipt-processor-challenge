@@ -3,6 +3,9 @@ from math import ceil
 from datetime import datetime
 from utils import is_alphanumeric
 
+# In-memory store
+receipt_store = {}
+
 def process_receipt(receipt):
     points = 0
 
@@ -31,4 +34,14 @@ def process_receipt(receipt):
     if hour == 14:
         points += 10
 
-    return str(uuid.uuid4()), points
+    # Store and return receipt ID
+    receipt_id = str(uuid.uuid4())
+    receipt_store[receipt_id] = {
+        "points": points,
+        "receipt": receipt
+    }
+
+    return receipt_id, points
+
+def get_points(receipt_id):
+    return receipt_store.get(receipt_id, {}).get("points", 0)
